@@ -1,0 +1,16 @@
+{"id":34,"name":"免蒸米饭","material":"","steps":"[]","types":"主食,速食","comment":""}
+{"id":35,"name":"免煮面食","material":"","steps":"[\"面吖鲜拌面\",\"日式乌冬面\"]","types":"主食,速食","comment":""}
+{"id":36,"name":"代餐粉","material":"","steps":"[]","types":"速食","comment":""}
+{"id":37,"name":"代餐粥","material":"","steps":"[\"八宝粥\"]","types":"主食,速食","comment":""}
+{"id":38,"name":"梅见青梅酒","material":"","steps":"[]","types":"酒","comment":"12度 26元"}
+{"id":39,"name":"真露果味酒","material":"","steps":"[]","types":"酒","comment":"10-13度 15-20元 草莓味最好喝"}
+{"id":66,"name":"煎蛋吐司","material":"鸡蛋 土司片 生菜 酱料","steps":"[\"吐司抹酱,夹煎蛋和生菜\",\"外层裹上保鲜膜\"]","types":"早餐夜宵","comment":""}
+{"id":67,"name":"面包+酱料+牛奶","material":"","steps":"[]","types":"早餐夜宵,速食","comment":""}
+{"id":68,"name":"燕麦片+牛奶","material":"","steps":"[]","types":"早餐夜宵,速食","comment":""}
+{"id":69,"name":"汤圆","material":"","steps":"[\"酒酿小圆子\",\"芝麻馅\",\"慎多\"]","types":"早餐夜宵","comment":"水果味馅慎买"}
+{"id":70,"name":"粽子","material":"","steps":"[]","types":"早餐夜宵","comment":""}
+{"id":71,"name":"青椒土豆丝","material":"土豆 青椒","steps":"[\"土豆丝切后用盐水浸泡\",\"炒时加少许水煮熟\",\"可加少许香醋\"]","types":"素蔬,家常菜","comment":""}
+{"id":72,"name":"小丁杂烩","material":"午餐肉/西红柿/土豆/白菜根/胡萝卜/酸菜","steps":"[]","types":"家常菜,杂烩","comment":""}
+{"id":104,"name":"红烧鲫鱼","material":"鲫鱼 生姜 豆瓣酱","steps":"[\"加水没过鱼身\",\"小火煮25min\"]","types":"肉荤,家常菜","comment":""}
+{"id":105,"name":"肉圆青菜汤","material":"猪肉碎末 小青菜/鸡毛菜 鸡蛋","steps":"[\"猪肉搅碎后不要洗\",\"不加水\",\"肉圆里加蛋清和盐\"]","types":"汤,家常菜","comment":""}
+{"id":106,"name":"蒸蛋","material":"鸡蛋 猪油","steps":"[\"1或2蛋\",\"1.5倍水\",\"加盐和猪油\"]","types":"汤,家常菜","comment":""}
