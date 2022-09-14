@@ -135,7 +135,7 @@ public class CommandConfig {
                     .setSupports(Collections.singletonList("delete"))
                     .setExecutions(Collections.singletonList(
                             new Command.Execution().setBean(ServiceType.foot_print.service()).setMethod("delete")))
-                    .setNextLevel(21).setBackLevel(2))
+                    .setNextLevel(221).setBackLevel(22))
 
             // 好吃的
             .addCommand(new Command().setLevel(3).setType(Command.Type.which)
@@ -148,12 +148,13 @@ public class CommandConfig {
             // Anki
             .addCommand(new Command().setLevel(5).setType(Command.Type.command)
                     .setQuestion("==== Anki Operation ====")
-                    .setSupports(Arrays.asList("new", "dname", "scard", "dcard"))
+                    .setSupports(Arrays.asList("new", "dname", "scard", "dcard", "iter"))
                     .setExecutions(Arrays.asList(
                             new Command.Execution().setBean(ServiceType.anki.service()).setMethod("newCard"),
                             new Command.Execution().setBean(ServiceType.anki.service()).setMethod("getDeckName"),
                             new Command.Execution().setBean(ServiceType.anki.service()).setMethod("searchCard"),
-                            new Command.Execution().setBean(ServiceType.anki.service()).setMethod("deleteCard")
+                            new Command.Execution().setBean(ServiceType.anki.service()).setMethod("deleteCard"),
+                            new Command.Execution().setBean(ServiceType.anki.service()).setMethod("iter")
                     ))
                     .setNextLevel(5).setBackLevel(0))
 

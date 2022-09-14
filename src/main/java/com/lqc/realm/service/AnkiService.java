@@ -7,10 +7,12 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONObject;
 import com.lqc.realm.config.CommonCacheConfig;
 import com.lqc.realm.manager.AnkiConnectService;
+import com.lqc.realm.manager.ReaderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -97,6 +99,7 @@ public class AnkiService {
      */
     public int searchCard(String deck, String keyword) {
         String deckName = CommonCacheConfig.getConfig("anki-deck-name", deck);
+        keyword = keyword.replaceAll("&", " ");
         List<Long> uids = this.connector.search(deckName, keyword);
         List<JSONObject> cards = this.connector.getCardsContent(uids);
         int index = 1;
@@ -113,12 +116,49 @@ public class AnkiService {
      */
     public int deleteCard(String deck, String keyword, String index) {
         String deckName = CommonCacheConfig.getConfig("anki-deck-name", deck);
+        keyword = keyword.replaceAll("&", " ");
         List<Long> uids = this.connector.search(deckName, keyword);
         List<JSONObject> cards = this.connector.getCardsContent(uids);
         String[] indexes = index.split(",");
         List<Long> toDelete = Arrays.stream(indexes).map(todo -> uids.get(Integer.parseInt(todo) - 1)).collect(Collectors.toList());
         boolean isDone = this.connector.deleteCards(toDelete);
         return isDone ? 1 : 0;
+    }
+
+    @Autowired
+    private ReaderService reader;
+
+    /**
+     * iter
+     */
+    public int iter() {
+        while (true) {
+            try {
+                String where = CommonCacheConfig.getConfig("anki", "iter");
+                List<Long> search = connector.search(where);
+                Long uid = search.get(0);
+                List<JSONObject> content = this.connector.getCardsContent(Collections.singletonList(uid));
+                JSONObject object = content.get(0);
+                System.out.println(object.get("正面"));
+                System.out.println(object.get("背面"));
+                System.out.print("> ");
+                String line = reader.getLine();
+                if (line.contains("del")) {
+                    this.connector.deleteCards(Collections.singletonList(uid));
+                }
+                if (line.contains("to")) {
+                    String to = line.split(" ")[1];
+                    String deckName = CommonCacheConfig.getConfig("anki-deck-name", to);
+                    this.connector.moveCards(Collections.singletonList(uid), deckName);
+                }
+                if (line.contains("new")) {
+                    String deckName = line.split(" ")[1];
+                    this.connector.createDeck(deckName);
+                }
+            } catch (Exception e) {
+                return 1;
+            }
+        }
     }
 
 }

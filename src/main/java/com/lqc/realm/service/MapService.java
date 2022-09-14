@@ -179,9 +179,12 @@ public class MapService {
             wrapper.eq("evaluate_type", Integer.parseInt(evaluate));
         }
         if (StrUtil.isNotBlank(time)) {
-            wrapper.like("date", Integer.parseInt(time));
+            if ("latest".equals(time)) {
+                wrapper.orderByDesc("date").last("limit 10");
+            } else {
+                wrapper.like("date", time).orderByDesc("date");
+            }
         }
-        wrapper.orderByDesc("date");
         return this.footprintMapper.selectList(wrapper);
     }
 

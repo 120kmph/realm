@@ -30,6 +30,11 @@ public class ReaderService {
             System.out.print("\033[H\033[2J");
             System.out.flush();
         }
+        if ("exit".equals(result)) {
+            System.out.println();
+            System.out.println("----------- bye -----------");
+            System.exit(0);
+        }
         return result;
     }
 
@@ -44,6 +49,11 @@ public class ReaderService {
         if ("cls".equals(result)) {
             System.out.print("\033[H\033[2J");
             System.out.flush();
+        }
+        if ("exit".equals(result)) {
+            System.out.println();
+            System.out.println("----------- bye -----------");
+            System.exit(0);
         }
         return result;
     }

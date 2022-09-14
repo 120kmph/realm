@@ -39,7 +39,6 @@ public class AppStarter {
         while (true) {
             // 程序终止
             if (currLevel == -2) {
-                System.out.println();
                 System.out.println("----------- bye -----------");
                 System.exit(0);
             }

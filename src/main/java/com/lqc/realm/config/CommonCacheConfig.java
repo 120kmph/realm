@@ -110,7 +110,7 @@ public class CommonCacheConfig {
             return "";
         }
         Map<String, String> map = config_map.get(type);
-        if (map == null || map.size() == 1) {
+        if (map == null || map.size() == 0) {
             return "";
         }
         return map.get(key);

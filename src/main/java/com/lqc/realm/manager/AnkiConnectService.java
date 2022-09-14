@@ -35,7 +35,7 @@ public class AnkiConnectService {
     /**
      * 创建牌组
      */
-    private boolean createDeck(String deckName) {
+    public boolean createDeck(String deckName) {
         JSONObject params = JSONUtil.createObj().set("deck", deckName);
         JSONObject toSend = JSONUtil.createObj().set("action", "createDeck").set("version", 6).set("params", params);
         String response = HttpRequest.post(location).body(toSend.toString()).execute().body();
@@ -45,7 +45,7 @@ public class AnkiConnectService {
     /**
      * 移动卡片到牌组
      */
-    private boolean moveCards(List<Long> cards, String toDeckName) {
+    public boolean moveCards(List<Long> cards, String toDeckName) {
         JSONObject params = JSONUtil.createObj().set("cards", cards).set("deck", toDeckName);
         JSONObject toSend = JSONUtil.createObj().set("action", "changeDeck").set("version", 6).set("params", params);
         String response = HttpRequest.post(location).body(toSend.toString()).execute().body();
