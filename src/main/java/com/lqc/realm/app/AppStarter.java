@@ -53,8 +53,9 @@ public class AppStarter {
                     while (inputStatus) {
                         List<Command.Option> options = command.getOptions();
                         for (Command.Option option : options) {
-                            System.out.println((options.indexOf(option) + 1) + " " + option.getText());
+                            System.out.print("【" + (options.indexOf(option) + 1) + "】" + option.getText() + "  ");
                         }
+                        System.out.println();
                         System.out.print(command.getCommand());
                         // 选择选项
                         String function = reader.getString();

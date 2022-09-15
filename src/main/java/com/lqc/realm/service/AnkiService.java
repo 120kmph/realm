@@ -1,5 +1,6 @@
 package com.lqc.realm.service;
 
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.file.FileReader;
 import cn.hutool.core.io.resource.ClassPathResource;
 import cn.hutool.core.lang.Console;
@@ -11,6 +12,7 @@ import com.lqc.realm.manager.ReaderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -45,7 +47,7 @@ public class AnkiService {
         // 行遍历
         for (String line : lines) {
             if (StrUtil.isBlank(line)) {
-                continue;
+                line = "";
             }
             // 标题
             if ("%".equals(line.substring(0, 1))) {
@@ -91,6 +93,26 @@ public class AnkiService {
         for (String key : map.keySet()) {
             Console.log("{} = {}", key, map.get(key));
         }
+        return 1;
+    }
+
+    /**
+     * 添加单张卡片(含图片)
+     */
+    public int addCard(String deck, String front, String back) {
+        String deckName = CommonCacheConfig.getConfig("anki-deck-name", deck);
+        String from = CommonCacheConfig.getConfig("path", "anki-pic-from");
+        String to = CommonCacheConfig.getConfig("path", "anki-pic-to");
+        List<File> files = FileUtil.loopFiles(new File(from));
+        for (File file : files) {
+            if (back.contains("&&&")) {
+                back = back.replaceFirst("&&&",
+                        "<img src=\"" + file.getName() + "\">");
+            }
+            FileUtil.copy(file, new File(to), false);
+            FileUtil.del(file);
+        }
+        this.connector.saveCard(deckName, front, back);
         return 1;
     }
 
