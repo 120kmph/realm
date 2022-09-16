@@ -148,14 +148,18 @@ public class CommandConfig {
             // Anki
             .addCommand(new Command().setLevel(5).setType(Command.Type.command)
                     .setQuestion("==== Anki Operation ====")
-                    .setSupports(Arrays.asList("new", "dname", "acard", "scard", "dcard", "iter"))
+                    .setSupports(Arrays.asList("sync", "new", "decks", "add", "find", "del", "del-tag", "move", "iter", "help"))
                     .setExecutions(Arrays.asList(
+                            new Command.Execution().setBean(ServiceType.anki.service()).setMethod("sync"),
                             new Command.Execution().setBean(ServiceType.anki.service()).setMethod("newCard"),
                             new Command.Execution().setBean(ServiceType.anki.service()).setMethod("getDeckName"),
                             new Command.Execution().setBean(ServiceType.anki.service()).setMethod("addCard"),
                             new Command.Execution().setBean(ServiceType.anki.service()).setMethod("searchCard"),
                             new Command.Execution().setBean(ServiceType.anki.service()).setMethod("deleteCard"),
-                            new Command.Execution().setBean(ServiceType.anki.service()).setMethod("iter")
+                            new Command.Execution().setBean(ServiceType.anki.service()).setMethod("deleteTag"),
+                            new Command.Execution().setBean(ServiceType.anki.service()).setMethod("moveCard"),
+                            new Command.Execution().setBean(ServiceType.anki.service()).setMethod("iter"),
+                            new Command.Execution().setBean(ServiceType.anki.service()).setMethod("help")
                     ))
                     .setNextLevel(5).setBackLevel(0))
 

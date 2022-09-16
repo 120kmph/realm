@@ -24,6 +24,15 @@ public class AnkiConnectService {
     private final String location = "localhost:8765";
 
     /**
+     * Anki更新
+     */
+    public boolean sync() {
+        JSONObject toSend = JSONUtil.createObj().set("action", "sync").set("version", 6);
+        String response = HttpRequest.post(location).body(toSend.toString()).execute().body();
+        return StrUtil.isBlank(JSONUtil.parseObj(response).getStr("result")) && StrUtil.isBlank(JSONUtil.parseObj(response).getStr("error"));
+    }
+
+    /**
      * 获取所有牌组的名字
      */
     public List<String> getAllDecks() {
@@ -67,6 +76,16 @@ public class AnkiConnectService {
      */
     public List<Long> search(String deckName, String keyword) {
         JSONObject params = JSONUtil.createObj().set("query", "deck:" + deckName + " " + keyword);
+        JSONObject toSend = JSONUtil.createObj().set("action", "findCards").set("version", 6).set("params", params);
+        String response = HttpRequest.post(location).body(toSend.toString()).execute().body();
+        return JSONUtil.parseArray(JSONUtil.parseObj(response).getStr("result")).toList(Long.class);
+    }
+
+    /**
+     * 搜索卡片
+     */
+    public List<Long> searchByTag(String tag) {
+        JSONObject params = JSONUtil.createObj().set("query", "tag:" + tag);
         JSONObject toSend = JSONUtil.createObj().set("action", "findCards").set("version", 6).set("params", params);
         String response = HttpRequest.post(location).body(toSend.toString()).execute().body();
         return JSONUtil.parseArray(JSONUtil.parseObj(response).getStr("result")).toList(Long.class);

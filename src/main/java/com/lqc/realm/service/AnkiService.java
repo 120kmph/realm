@@ -31,6 +31,14 @@ public class AnkiService {
     private AnkiConnectService connector;
 
     /**
+     * Anki更新
+     */
+    public int sync() {
+        boolean isDone = this.connector.sync();
+        return isDone ? 1 : 0;
+    }
+
+    /**
      * 批量添加新卡片到牌组
      */
     public int newCard() {
@@ -47,7 +55,9 @@ public class AnkiService {
         // 行遍历
         for (String line : lines) {
             if (StrUtil.isBlank(line)) {
-                line = "";
+                back.append("<br/>");
+                index++;
+                continue;
             }
             // 标题
             if ("%".equals(line.substring(0, 1))) {
@@ -105,15 +115,18 @@ public class AnkiService {
         String to = CommonCacheConfig.getConfig("path", "anki-pic-to");
         List<File> files = FileUtil.loopFiles(new File(from));
         for (File file : files) {
-            if (back.contains("&&&")) {
-                back = back.replaceFirst("&&&",
-                        "<img src=\"" + file.getName() + "\">");
+            if (front.contains("&&&")) {
+                front = front.replaceFirst("&&&", "<img src=\"" + file.getName() + "\">");
+            } else {
+                if (back.contains("&&&")) {
+                    back = back.replaceFirst("&&&", "<img src=\"" + file.getName() + "\">");
+                }
             }
             FileUtil.copy(file, new File(to), false);
             FileUtil.del(file);
         }
-        this.connector.saveCard(deckName, front, back);
-        return 1;
+        boolean isDone = this.connector.saveCard(deckName, front, back);
+        return isDone ? 1 : 0;
     }
 
     /**
@@ -144,6 +157,27 @@ public class AnkiService {
         String[] indexes = index.split(",");
         List<Long> toDelete = Arrays.stream(indexes).map(todo -> uids.get(Integer.parseInt(todo) - 1)).collect(Collectors.toList());
         boolean isDone = this.connector.deleteCards(toDelete);
+        return isDone ? 1 : 0;
+    }
+
+    /**
+     * 删除tag标记为del的卡片
+     */
+    public int deleteTag() {
+        List<Long> toDel = this.connector.searchByTag("del");
+        Console.log("There are {} cards have found.", toDel.size());
+        boolean isDone = this.connector.deleteCards(toDel);
+        return isDone ? 1 : 0;
+    }
+
+    /**
+     * 将标记有move的卡片移动到指定牌组
+     */
+    public int moveCard(String to) {
+        List<Long> toMove = this.connector.searchByTag("move");
+        Console.log("There are {} cards have found.", toMove.size());
+        String deckName = CommonCacheConfig.getConfig("anki-deck-name", to);
+        boolean isDone = this.connector.moveCards(toMove, deckName);
         return isDone ? 1 : 0;
     }
 
@@ -181,6 +215,22 @@ public class AnkiService {
                 return 1;
             }
         }
+    }
+
+    /**
+     * 指令帮助
+     */
+    public int help() {
+        System.out.println("sync : Anki更新");
+        System.out.println("new : 批量从txt写入卡片到anki");
+        System.out.println("decks : 查看外部配置的牌组名及其简称");
+        System.out.println("add : add deckName &&& &&&  向卡组中添加含有图片的卡片");
+        System.out.println("find : find deckName key&key 在牌组中查找卡片");
+        System.out.println("del : del deckName key&key 1,2,3 删除搜索结果中的卡片");
+        System.out.println("del-tag : 删除标记有del的卡片");
+        System.out.println("move-to : move-to deckName 将标记有move的卡片移动到指定牌组");
+        System.out.println("iter : 在外部配置中指定的牌组中遍历操作卡片");
+        return 1;
     }
 
 }
