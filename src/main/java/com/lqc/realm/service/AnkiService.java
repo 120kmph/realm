@@ -181,6 +181,25 @@ public class AnkiService {
         return isDone ? 1 : 0;
     }
 
+    /**
+     * 设置卡组每天复习个数
+     */
+    public int setReview(String deck, String todo) {
+        String deckName = CommonCacheConfig.getConfig("anki-deck-name", deck);
+        if ("init".equals(todo)) {
+            // 每日初始时设置 5个
+            boolean isDone = this.connector.setReviewNum(deckName, 5);
+            return isDone ? 1 : 0;
+        }
+        if ("add".equals(todo)) {
+            // 复习数+5
+            int num = this.connector.getReviewNum(deckName);
+            boolean isDone = this.connector.setReviewNum(deckName, num + 5);
+            return isDone ? 1 : 0;
+        }
+        return 0;
+    }
+
     @Autowired
     private ReaderService reader;
 
@@ -229,6 +248,7 @@ public class AnkiService {
         System.out.println("del : del deckName key&key 1,2,3 删除搜索结果中的卡片");
         System.out.println("del-tag : 删除标记有del的卡片");
         System.out.println("move-to : move-to deckName 将标记有move的卡片移动到指定牌组");
+        System.out.println("set : set deckName init 复习5个   set deckName add 复习数+5");
         System.out.println("iter : 在外部配置中指定的牌组中遍历操作卡片");
         return 1;
     }
