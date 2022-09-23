@@ -1,5 +1,6 @@
 package com.lqc.realm.manager;
 
+import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.json.JSONObject;
@@ -82,13 +83,34 @@ public class AnkiConnectService {
     }
 
     /**
-     * 搜索卡片
+     * 搜索卡片 by tag
      */
     public List<Long> searchByTag(String tag) {
         JSONObject params = JSONUtil.createObj().set("query", "tag:" + tag);
         JSONObject toSend = JSONUtil.createObj().set("action", "findCards").set("version", 6).set("params", params);
         String response = HttpRequest.post(location).body(toSend.toString()).execute().body();
         return JSONUtil.parseArray(JSONUtil.parseObj(response).getStr("result")).toList(Long.class);
+    }
+
+    /**
+     * 移除卡片的tag
+     */
+    public boolean removeTag(String tag) {
+        List<Long> move = this.searchByTag(tag);
+        JSONObject params = JSONUtil.createObj().set("notes", this.cardToNote(move)).set("tags", tag);
+        JSONObject toSend = JSONUtil.createObj().set("action", "removeTags").set("version", 6).set("params", params);
+        String response = HttpRequest.post("localhost:8765").body(toSend.toString()).execute().body();
+        return StrUtil.isBlank(JSONUtil.parseObj(response).getStr("result")) && StrUtil.isBlank(JSONUtil.parseObj(response).getStr("error"));
+    }
+
+    /**
+     * cardId -> noteId
+     */
+    private List<Long> cardToNote(List<Long> uids) {
+        JSONObject params = JSONUtil.createObj().set("cards", uids);
+        JSONObject toSend = JSONUtil.createObj().set("action", "cardsToNotes").set("version", 6).set("params", params);
+        String response = HttpRequest.post(location).body(toSend.toString()).execute().body();
+        return JSONUtil.parseObj(response).getBeanList("result", Long.class);
     }
 
     /**
