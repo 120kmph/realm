@@ -41,7 +41,8 @@ public class AnkiService {
     /**
      * 批量添加新卡片到牌组
      */
-    public int newCard() {
+    public int newCard(String deck) {
+        String deckName = CommonCacheConfig.getConfig("anki-deck-name", deck);
         String title = "";
         // 读取文件
         ClassPathResource classPathResource = new ClassPathResource("");
@@ -66,7 +67,7 @@ public class AnkiService {
             }
             // 单张卡片读取结束 存入anki
             if ("#".equals(line)) {
-                boolean result = connector.saveCard("Todo::New", front, back.toString());
+                boolean result = connector.saveCard(deckName, front, back.toString());
                 if (result) {
                     done++;
                 } else {
@@ -244,7 +245,7 @@ public class AnkiService {
      */
     public int help() {
         System.out.println("sync : Anki更新");
-        System.out.println("new : 批量从txt写入卡片到anki");
+        System.out.println("new deck: 批量从txt写入卡片到anki牌组");
         System.out.println("decks : 查看外部配置的牌组名及其简称");
         System.out.println("add : add deckName &&& &&&  向卡组中添加含有图片的卡片");
         System.out.println("find : find deckName key&key 在牌组中查找卡片");
