@@ -39,6 +39,15 @@ public class AnkiService {
     }
 
     /**
+     * 返回当期牌组中卡片数量 用来确保批量加入牌组数量
+     */
+    public int count(String deck) {
+        String deckName = CommonCacheConfig.getConfig("anki-deck-name", deck);
+        List<Long> search = this.connector.search(deckName);
+        return search.size();
+    }
+
+    /**
      * 批量添加新卡片到牌组
      */
     public int newCard(String deck) {

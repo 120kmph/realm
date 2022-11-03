@@ -32,7 +32,7 @@ public class CommandConfig {
             // 一级
             .addCommand(new Command().setLevel(0).setType(Command.Type.which)
                     .setOptions(Arrays.asList(
-                            new Command.Option().setText("Data Admin").setNextLevel(1),
+                            new Command.Option().setText("Data").setNextLevel(1),
                             new Command.Option().setText("To Go").setNextLevel(2),
                             new Command.Option().setText("To Eat").setNextLevel(3),
                             new Command.Option().setText("To Life").setNextLevel(4),
@@ -148,7 +148,7 @@ public class CommandConfig {
             // Anki
             .addCommand(new Command().setLevel(5).setType(Command.Type.command)
                     .setQuestion("==== Anki Operation ====")
-                    .setSupports(Arrays.asList("sync", "new", "decks", "add", "find", "del", "del-tag", "move", "set", "iter", "help"))
+                    .setSupports(Arrays.asList("sync", "new", "decks", "add", "find", "del", "del-tag", "move", "set", "iter", "count", "help"))
                     .setExecutions(Arrays.asList(
                             new Command.Execution().setBean(ServiceType.anki.service()).setMethod("sync"),
                             new Command.Execution().setBean(ServiceType.anki.service()).setMethod("newCard"),
@@ -160,6 +160,7 @@ public class CommandConfig {
                             new Command.Execution().setBean(ServiceType.anki.service()).setMethod("moveCard"),
                             new Command.Execution().setBean(ServiceType.anki.service()).setMethod("setReview"),
                             new Command.Execution().setBean(ServiceType.anki.service()).setMethod("iter"),
+                            new Command.Execution().setBean(ServiceType.anki.service()).setMethod("count"),
                             new Command.Execution().setBean(ServiceType.anki.service()).setMethod("help")
                     ))
                     .setNextLevel(5).setBackLevel(0))
