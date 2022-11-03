@@ -44,7 +44,8 @@ public class AnkiService {
     public int count(String deck) {
         String deckName = CommonCacheConfig.getConfig("anki-deck-name", deck);
         List<Long> search = this.connector.search(deckName);
-        return search.size();
+        System.out.println(deckName + " has " + search.size());
+        return 1;
     }
 
     /**
