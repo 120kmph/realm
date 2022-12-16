@@ -201,8 +201,8 @@ public class AnkiService {
     public int setReview(String deck, String todo) {
         String deckName = CommonCacheConfig.getConfig("anki-deck-name", deck);
         if ("init".equals(todo)) {
-            // 每日初始时设置 5个
-            boolean isDone = this.connector.setReviewNum(deckName, 5);
+            // 每日初始时设置 0个
+            boolean isDone = this.connector.setReviewNum(deckName, 0);
             return isDone ? 1 : 0;
         }
         if ("add".equals(todo)) {
