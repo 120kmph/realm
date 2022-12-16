@@ -202,13 +202,19 @@ public class AnkiService {
         String deckName = CommonCacheConfig.getConfig("anki-deck-name", deck);
         if ("init".equals(todo)) {
             // 每日初始时设置 5个
-            boolean isDone = this.connector.setReviewNum(deckName, 10);
+            boolean isDone = this.connector.setReviewNum(deckName, 5);
             return isDone ? 1 : 0;
         }
         if ("add".equals(todo)) {
             // 复习数+5
             int num = this.connector.getReviewNum(deckName);
-            boolean isDone = this.connector.setReviewNum(deckName, num + 10);
+            boolean isDone = this.connector.setReviewNum(deckName, num + 5);
+            return isDone ? 1 : 0;
+        }
+        if (Arrays.asList("1", "2", '3', "4", "5").contains(todo)) {
+            // 复习数+5
+            int num = this.connector.getReviewNum(deckName);
+            boolean isDone = this.connector.setReviewNum(deckName, num + Integer.parseInt(todo));
             return isDone ? 1 : 0;
         }
         return 0;
