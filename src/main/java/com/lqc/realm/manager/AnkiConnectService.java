@@ -200,5 +200,31 @@ public class AnkiConnectService {
         return result != null && result;
     }
 
+    /**
+     * 获取牌组配置 - 每天新卡片个数
+     */
+    public int getNewNum(String deckName) {
+        JSONObject params = JSONUtil.createObj().set("deck", deckName);
+        JSONObject toSend = JSONUtil.createObj().set("action", "getDeckConfig").set("version", 6).set("params", params);
+        String response = HttpRequest.post(location).body(toSend.toString()).execute().body();
+        return JSONUtil.parseObj(response).getJSONObject("result").getJSONObject("new").getInt("perDay");
+    }
+
+    /**
+     * 设置牌组参数 - 每天复习个数
+     */
+    public boolean setNewNum(String deckName, int day) {
+        JSONObject params = JSONUtil.createObj().set("deck", deckName);
+        JSONObject toSend = JSONUtil.createObj().set("action", "getDeckConfig").set("version", 6).set("params", params);
+        String response = HttpRequest.post("localhost:8765").body(toSend.toString()).execute().body();
+        JSONObject config = JSONUtil.parseObj(response).getJSONObject("result");
+        config.getJSONObject("new").set("perDay", day);
+        JSONObject params_to = JSONUtil.createObj().set("config", config);
+        JSONObject toSend_to = JSONUtil.createObj().set("action", "saveDeckConfig").set("version", 6).set("params", params_to);
+        String response_to = HttpRequest.post("localhost:8765").body(toSend_to.toString()).execute().body();
+        Boolean result = JSONUtil.parseObj(response_to).getBool("result");
+        return result != null && result;
+    }
+
 
 }

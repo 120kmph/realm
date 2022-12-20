@@ -211,10 +211,35 @@ public class AnkiService {
             boolean isDone = this.connector.setReviewNum(deckName, num + 5);
             return isDone ? 1 : 0;
         }
-        if (Arrays.asList("1", "2", '3', "4", "5").contains(todo)) {
+        if (Arrays.asList("1", "2", "3", "4", "5").contains(todo)) {
             // 复习数+
             int num = this.connector.getReviewNum(deckName);
             boolean isDone = this.connector.setReviewNum(deckName, num + Integer.parseInt(todo));
+            return isDone ? 1 : 0;
+        }
+        return 0;
+    }
+
+    /**
+     * 设置卡组每天新卡片个数
+     */
+    public int setNew(String deck, String todo) {
+        String deckName = CommonCacheConfig.getConfig("anki-deck-name", deck);
+        if ("init".equals(todo)) {
+            // 每日初始时设置 0个
+            boolean isDone = this.connector.setNewNum(deckName, 0);
+            return isDone ? 1 : 0;
+        }
+        if ("add".equals(todo)) {
+            // 复习数+5
+            int num = this.connector.getNewNum(deckName);
+            boolean isDone = this.connector.setNewNum(deckName, num + 5);
+            return isDone ? 1 : 0;
+        }
+        if (Arrays.asList("1", "2", "3", "4", "5").contains(todo)) {
+            // 复习数+
+            int num = this.connector.getNewNum(deckName);
+            boolean isDone = this.connector.setNewNum(deckName, num + Integer.parseInt(todo));
             return isDone ? 1 : 0;
         }
         return 0;
@@ -268,7 +293,8 @@ public class AnkiService {
         System.out.println("del : del deckName key&key 1,2,3 删除搜索结果中的卡片");
         System.out.println("del-tag : 删除标记有del的卡片");
         System.out.println("move-to : move deckName 将标记有move的卡片移动到指定牌组");
-        System.out.println("set : set deckName init 复习5个   set deckName add 复习数+5   set deckName 1 复习数+1");
+        System.out.println("setRe : setRe deckName init 复习0个   setRe deckName add 复习数+5   setRe deckName 1 复习数+1");
+        System.out.println("setNew : setNew deckName init 新卡片5个   setNew deckName add 新卡片+5   setNew deckName 1 新卡片+1");
         System.out.println("iter : iter deckName 在外部配置中指定的牌组中遍历操作卡片");
         return 1;
     }
