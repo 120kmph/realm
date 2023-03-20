@@ -3,6 +3,7 @@ package com.lqc.realm.service;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Console;
+import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
@@ -22,7 +23,9 @@ import org.springframework.stereotype.Service;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -238,25 +241,44 @@ public class MapService {
         String cityProgress = new DecimalFormat("0.00").format((float) cityDoneCount * 100 / CommonConfig.MAP_CITY_NUM);
         System.out.println("去过的城市: " + cityDoneCount + "个     进度: " + cityProgress + "%");
         System.out.println();
+
         // 分省
         System.out.println("- - - - - - - - - - - - - -");
         System.out.println("分省统计");
-        int provinceIndex = 1;
+
+        Map<String, Integer> provinceMap = new HashMap<>();
         for (String province : CommonConfig.MAP_PROVINCE) {
             Long provinceCount = this.footprintMapper.selectCount(new QueryWrapper<Footprint>().like("province", province));
-            System.out.print(province + " - " + provinceCount + "\t");
+            provinceMap.put(province,  provinceCount.intValue());
+        }
+        MapUtil.sortByValue(provinceMap, true);
+
+        int provinceIndex = 1;
+        for (String province : provinceMap.keySet()) {
+            System.out.print(province + " - " + provinceMap.get(province) + "\t");
             if (provinceIndex++ % 4 == 0) {
                 System.out.println();
             }
         }
+
+
         System.out.println();
         System.out.println("- - - - - - - - - - - - - -");
+
         // 分类型
         System.out.println("类型统计");
+
+        Map<AllType, Integer> typeMap = new HashMap<>();
         for (AllType type : CommonCacheConfig.typeCache.get(1)) {
             Long typeCount = this.footprintMapper.selectCount(new QueryWrapper<Footprint>().eq("type", type.getCode()));
-            System.out.println(type.getDesc() + " - " + typeCount);
+            typeMap.put(type, typeCount.intValue());
         }
+        MapUtil.sortByValue(typeMap, true);
+
+        for (AllType type : typeMap.keySet()) {
+            System.out.println(type.getDesc() + " - " + typeMap.get(type));
+        }
+
         return 1;
     }
 }
