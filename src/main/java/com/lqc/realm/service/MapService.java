@@ -251,7 +251,7 @@ public class MapService {
             Long provinceCount = this.footprintMapper.selectCount(new QueryWrapper<Footprint>().like("province", province));
             provinceMap.put(province,  provinceCount.intValue());
         }
-        MapUtil.sortByValue(provinceMap, true);
+        provinceMap = MapUtil.sortByValue(provinceMap, true);
 
         int provinceIndex = 1;
         for (String province : provinceMap.keySet()) {
@@ -273,7 +273,7 @@ public class MapService {
             Long typeCount = this.footprintMapper.selectCount(new QueryWrapper<Footprint>().eq("type", type.getCode()));
             typeMap.put(type, typeCount.intValue());
         }
-        MapUtil.sortByValue(typeMap, true);
+        typeMap = MapUtil.sortByValue(typeMap, true);
 
         for (AllType type : typeMap.keySet()) {
             System.out.println(type.getDesc() + " - " + typeMap.get(type));
