@@ -137,7 +137,7 @@ public class AnkiService {
         }
         Set<String> set = CommonConfig.MATH_FLAGS.keySet();
         for (String key : set) {
-            if (string.contains(key)) {
+            while (string.contains(key)) {
                 string = string.replaceFirst(key, CommonConfig.MATH_FLAGS.get(key));
             }
         }
