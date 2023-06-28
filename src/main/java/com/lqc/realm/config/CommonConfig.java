@@ -112,6 +112,7 @@ public class CommonConfig {
             .put("@wuqiong", "&#8734;")
             .put("@bing", "&#8746;")
             .put("@jiao", "&#8745;")
+            .put("@fouding", "&#172;")
             .put("@yinwei", "&#8757;")
             .put("@suoyi", "&#8756;")
             .put("@yuedeng", "&#8776;")
