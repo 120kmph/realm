@@ -79,6 +79,7 @@ public class AnkiService {
         Console.log("check done");
         // 行遍历
         for (String line : lines) {
+            line = this.dealLine(line);
             if (line.contains("&&&")) {
                 File file = files.get(fileIndex);
                 line = line.replaceFirst("&&&", "<img src=\"" + file.getName() + "\">");
