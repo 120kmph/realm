@@ -7,6 +7,7 @@ import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONObject;
 import com.lqc.realm.config.CommonCacheConfig;
+import com.lqc.realm.config.CommonConfig;
 import com.lqc.realm.manager.AnkiConnectService;
 import com.lqc.realm.manager.ReaderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -53,7 +55,6 @@ public class AnkiService {
      */
     public int newCard(String deck) {
         String deckName = CommonCacheConfig.getConfig("anki-deck-name", deck);
-        String title = "";
         // 读取文件
         ClassPathResource classPathResource = new ClassPathResource("");
         String from = classPathResource.getAbsolutePath();
@@ -63,16 +64,32 @@ public class AnkiService {
         String front = "";
         StringBuilder back = new StringBuilder();
         List<String> lines = reader.readLines();
+
+        int fileIndex = 0;
+        String fileFrom = CommonCacheConfig.getConfig("path", "anki-pic-from");
+        String fileTo = CommonCacheConfig.getConfig("path", "anki-pic-to");
+        String fileBack = CommonCacheConfig.getConfig("path", "anki-pic-back");
+        List<File> files = FileUtil.loopFiles(new File(fileFrom));
+
+        boolean go = this.check(files, lines);
+        if (!go) {
+            return 0;
+        }
+
+        Console.log("check done");
         // 行遍历
         for (String line : lines) {
+            if (line.contains("&&&")) {
+                File file = files.get(fileIndex);
+                line = line.replaceFirst("&&&", "<img src=\"" + file.getName() + "\">");
+                FileUtil.copy(file, new File(fileTo), false);
+                FileUtil.copy(file, new File(fileBack), false);
+                FileUtil.del(file);
+                fileIndex++;
+            }
             if (StrUtil.isBlank(line)) {
                 back.append("<br/>");
                 index++;
-                continue;
-            }
-            // 标题
-            if ("%".equals(line.substring(0, 1))) {
-                title = line.substring(1);
                 continue;
             }
             // 单张卡片读取结束 存入anki
@@ -89,14 +106,7 @@ public class AnkiService {
                 continue;
             }
             if (index == 1) {
-                if (StrUtil.isBlank(title)) {
-                    front = line;
-                } else {
-                    front = title + " - " + line;
-                    if (line.length() > 8) {
-                        front = title + "<br/>" + line;
-                    }
-                }
+                front = line;
                 index++;
                 continue;
             }
@@ -105,6 +115,32 @@ public class AnkiService {
         }
         Console.log("add done counter={}", counter);
         return counter == done ? 1 : 0;
+    }
+
+    private boolean check(List<File> files, List<String> lines) {
+        int count = 0;
+        for (String line : lines) {
+            if (line.contains("&&&")) {
+                count++;
+            }
+        }
+        if (count != files.size()) {
+            Console.log("pic wrong &&& has {}, pic has {}", count, files.size());
+        }
+        return count == files.size();
+    }
+
+    private String dealLine(String string) {
+        if (string.contains("<>")) {
+            string = string.replaceFirst("<>","【】");
+        }
+        Set<String> set = CommonConfig.MATH_FLAGS.keySet();
+        for (String key : set) {
+            if (string.contains(key)) {
+                string = string.replaceFirst(key, CommonConfig.MATH_FLAGS.get(key));
+            }
+        }
+        return string;
     }
 
     /**
