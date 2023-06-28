@@ -132,7 +132,7 @@ public class AnkiService {
     }
 
     private String dealLine(String string) {
-        if (string.contains("<>")) {
+        while (string.contains("<>")) {
             string = string.replaceFirst("<>","【】");
         }
         Set<String> set = CommonConfig.MATH_FLAGS.keySet();
