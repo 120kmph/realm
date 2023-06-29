@@ -125,11 +125,15 @@ public class CommonConfig {
             .put("@beibaohan", "&#8839;")
             .put("@bubaohan", "&#8840;")
             .put("@zhenbaohan", "&#8842;")
+
             .put("@aerfa", "&alpha;")
             .put("@beita", "&beta;")
             .put("@gama", "&gamma;")
             .put("@deierta", "&delta;")
             .put("@sita", "&theta;")
+            .put("@fai", "&phi;")
+            .put("@omiga", "&omega;")
+            .put("@sigma", "&sigma;")
             .build();
 
 
