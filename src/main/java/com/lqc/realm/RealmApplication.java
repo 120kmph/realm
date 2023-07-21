@@ -2,13 +2,12 @@ package com.lqc.realm;
 
 import com.lqc.realm.app.AppStarter;
 import lombok.SneakyThrows;
-import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.context.ConfigurableApplicationContext;
 
-@SpringBootApplication
-@MapperScan("com.lqc.realm.mapper")
+@SpringBootApplication(exclude = DataSourceAutoConfiguration.class)
 public class RealmApplication {
 
     @SneakyThrows

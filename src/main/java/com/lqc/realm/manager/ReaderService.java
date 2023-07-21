@@ -4,7 +4,6 @@ import com.lqc.realm.exception.GoBack;
 import com.lqc.realm.exception.ReEnter;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.util.Scanner;
 
 /**

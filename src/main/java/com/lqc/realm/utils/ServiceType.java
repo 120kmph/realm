@@ -14,11 +14,7 @@ import java.util.stream.Collectors;
 public enum ServiceType {
 
     none(0, "未知", "none", ""),
-    data(1, "数据服务", "dataService", ""),
-    all_type(2, "类型", "typeService", "all_type.txt"),
-    foot_print(3, "足迹", "mapService", "foot_print.txt"),
-    food(4, "好吃的", "foodService", "food.txt"),
-    anki(5, "Anki", "ankiService", "");
+    anki(1, "Anki", "ankiService", "");
 
 
     private final int code;
