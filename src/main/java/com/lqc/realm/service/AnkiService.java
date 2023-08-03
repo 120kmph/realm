@@ -319,6 +319,29 @@ public class AnkiService {
     }
 
     /**
+     * 将该卡组内 卡片正面首行 添加标题
+     */
+    public int addHead(String deck, String head) {
+        // 创建一个备份卡组
+        String where = CommonCacheConfig.getConfig("anki-deck-name", deck);
+        String togo = where + " - back";
+        this.connector.createDeck(togo);
+
+        List<Long> ids = this.connector.search(where);
+        List<JSONObject> cards = this.connector.getCardsContent(ids);
+        int count = 0;
+        for (JSONObject card : cards) {
+            String todo = card.getStr("正面");
+            todo = head + "</br>" + todo;
+
+            this.connector.saveCard(togo, todo, card.getStr("背面"));
+            count++;
+        }
+        Console.log("{} cards done", count);
+        return 1;
+    }
+
+    /**
      * 指令帮助
      */
     public int help() {
@@ -330,9 +353,8 @@ public class AnkiService {
         System.out.println("del : del deckName key&key 1,2,3 删除搜索结果中的卡片");
         System.out.println("del-tag : 删除标记有del的卡片");
         System.out.println("move-to : move deckName 将标记有move的卡片移动到指定牌组");
-        System.out.println("setRe : setRe deckName init 复习0个   setRe deckName add 复习数+5   setRe deckName 1 复习数+1");
-        System.out.println("setNew : setNew deckName init 新卡片5个   setNew deckName add 新卡片+5   setNew deckName 1 新卡片+1");
         System.out.println("iter : iter deckName 在外部配置中指定的牌组中遍历操作卡片");
+        System.out.println("addHead : addHead deckName head 将该卡组内 新卡片正面首行 添加标题");
         return 1;
     }
 
