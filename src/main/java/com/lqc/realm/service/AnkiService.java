@@ -366,8 +366,8 @@ public class AnkiService {
         }
 
         for (int index = 0; index < files.size(); index += 2) {
-            String front = "<img src=\"" + files.get(index).getName() + "\">'";
-            String back = "<img src=\"" + files.get(index + 1).getName() + "\">'";
+            String front = "<img src=\"" + files.get(index).getName() + "\">";
+            String back = "<img src=\"" + files.get(index + 1).getName() + "\">";
             boolean result = connector.saveCard(deckName, front, back);
             if (result) {
                 done++;
