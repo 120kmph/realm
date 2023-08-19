@@ -342,6 +342,53 @@ public class AnkiService {
     }
 
     /**
+     * 将该卡组内 卡片正面首行 添加标题
+     */
+    public int pic(String deck) {
+        String deckName = CommonCacheConfig.getConfig("anki-deck-name", deck);
+        // 读取文件
+        ClassPathResource classPathResource = new ClassPathResource("");
+        String from = classPathResource.getAbsolutePath();
+        from = from.substring(0, from.length() - 44) + "anki_from.txt";
+        FileReader reader = new FileReader(from);
+        int done = 0, error = 0;
+        List<String> lines = reader.readLines();
+
+        int fileIndex = 0;
+        String fileFrom = CommonCacheConfig.getConfig("path", "anki-pic-from");
+        String fileTo = CommonCacheConfig.getConfig("path", "anki-pic-to");
+        String fileBack = CommonCacheConfig.getConfig("path", "anki-pic-back");
+        List<File> files = FileUtil.loopFiles(new File(fileFrom));
+
+        if (files.size() % 2 == 1) {
+            Console.log("pics wrong {}", files.size());
+            return 1;
+        }
+
+        for (int index = 0; index < files.size(); index += 2) {
+            String front = "<img src=\"" + files.get(index).getName() + "\">'";
+            String back = "<img src=\"" + files.get(index + 1).getName() + "\">'";
+            boolean result = connector.saveCard(deckName, front, back);
+            if (result) {
+                done++;
+            } else {
+                error++;
+            }
+
+            FileUtil.copy(files.get(index), new File(fileTo), false);
+            FileUtil.copy(files.get(index), new File(fileBack), false);
+            FileUtil.del(files.get(index));
+
+            FileUtil.copy(files.get(index + 1), new File(fileTo), false);
+            FileUtil.copy(files.get(index + 1), new File(fileBack), false);
+            FileUtil.del(files.get(index + 1));
+        }
+
+        Console.log("{} cards done, {} cards error", done, error);
+        return 1;
+    }
+
+    /**
      * 指令帮助
      */
     public int help() {
@@ -355,6 +402,7 @@ public class AnkiService {
         System.out.println("move-to : move deckName 将标记有move的卡片移动到指定牌组");
         System.out.println("iter : iter deckName 在外部配置中指定的牌组中遍历操作卡片");
         System.out.println("addHead : addHead deckName head 将该卡组内 新卡片正面首行 添加标题");
+        System.out.println("pic : 将指定目录中图片 一正一反 制作卡片");
         return 1;
     }
 
